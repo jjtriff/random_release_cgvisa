@@ -1,7 +1,6 @@
 <?php
 
 // libs to import
-include('lib/bookit/CRestClient.php');
 include('lib/jsoncollection.php');
 
 //leer la configuraciones iniciales
