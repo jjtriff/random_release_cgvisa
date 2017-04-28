@@ -41,7 +41,7 @@ class BookitDay extends StdClass
         $GLOBALS['free.ini']['reservation_phone'], 
         $GLOBALS['free.ini']['reservation_comment']
       );
-      $retries = $GLOBALS['free.ini']['retri_id'];     
+      $retries = $GLOBALS['free.ini']['retries'];     
       $this->prereserve($agenda, $service, $client, $retries);
     }
 
