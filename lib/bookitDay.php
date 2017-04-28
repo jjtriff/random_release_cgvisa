@@ -3,9 +3,9 @@
 include('bookit/CRestClient.php');
 include_once('reservationUser.php');
 include_once('jsoncollection.php');
+include_once('randomization.php');
+include_once('bookitClient.php');
 
-//
-//
 
 /**
  * objeto para representar los d'ias de bookitit y las distintas decisiones sobre el mismo
@@ -28,6 +28,21 @@ class BookitDay extends StdClass
       $this->exec_count = $bookitDay->exec_count;
       // esta sera una lista de los id de los turnos preservados 
       $this->prereservations = $bookitDay->prereservations;
+    }
+
+    public function prereserve()
+    {
+      
+      $agenda = $GLOBALS['free.ini']['agenda_id'];
+      $service = $GLOBALS['free.ini']['service_id'];
+      $client =  new ReservationUser(
+        $GLOBALS['free.ini']['reservation_name'], 
+        $GLOBALS['free.ini']['reservation_mail'],
+        $GLOBALS['free.ini']['reservation_phone'], 
+        $GLOBALS['free.ini']['reservation_comment']
+      );
+      $retries = $GLOBALS['free.ini']['retri_id'];     
+      $this->prereserve($agenda, $service, $client, $retries);
     }
 
     public function prereserve($agenda, $service, $client, $retries)
@@ -94,6 +109,31 @@ class BookitDay extends StdClass
           $retries--;
         }
       }
+      $totalp = count($this->preservations);
+      error_log("Reservados un total de $totalp para el d'ia $this->date, para la agenda $agenda");
+    }
+
+    public function releaseDates($howMany, $retries)
+    {
+      //buscar random en el array tantos como $howMany
+      $selected = Randomize\someFromArray($this->prereservations, $howMany);
+      //con cada uno de esos mandarlo a eliminar en el sistema
+      foreach ($selected as $key => $eventId) {
+        $ret = $retries;
+          while($ret <= 0){
+            try{
+                $forDeletion = CGHAB\BookititClient\deleteEvent($eventId);
+                break;
+            } catch (Exception $e){
+              error_log($e->getMessage());
+              $ret--;
+            }
+          }
+        //si se elimina ok eliminarlo del array
+        if($forDeletion){
+          unset($this->preservations[$key]);
+        }
+      }
     }
 }
 
@@ -105,13 +145,20 @@ class BookitDay extends StdClass
 // $d->prereserve("bkt103664", "bkt219175", $u, 1 );
 
 $db = new JsonCollection();
-$d = unserialize( $db->col["2017-10-17"]);
+$d = unserialize($db->col["2017-10-17"]);
 // $nd = new BookitDay($d->date);
 // $nd->mapper($d);
 
 // $db->col[$nd->date] = serialize($nd);
 
-$d-
+// $d-
+
+
+// $a = ['a', 'b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+// $b = Randomize\someFromArray($a, 2);
+// print_r ($b);
+
+$d->releaseDate() $
 
 
 
