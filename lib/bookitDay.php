@@ -18,12 +18,12 @@ class BookitDay extends StdClass
     // esta sera una lista de los id de los turnos preservados 
     public $prereservations = array();
     
-    function __construct($date)
+    public function __construct($date)
     {
        $this->date = $date;
     }
 
-    function mapper(StdClass $bookitDay){
+    public function mapper(StdClass $bookitDay){
       $this->date = $bookitDay->date;
       $this->exec_count = $bookitDay->exec_count;
       // esta sera una lista de los id de los turnos preservados 
