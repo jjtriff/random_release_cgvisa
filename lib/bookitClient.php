@@ -1,6 +1,8 @@
 <?php
 namespace CGHAB\BookititClient;
 
+include_once('bookit/CRestClient.php');
+
 /**
 *   Deletes an event based in its id and returns true o success.
 *   Sends an exception if anything goes wrogn.
@@ -8,7 +10,7 @@ namespace CGHAB\BookititClient;
 
 
 function deleteEvent($eventId){
-    $oRestClient = new CRestClient();
+    $oRestClient = new \CRestClient();
     $result = $oRestClient->deleteEvent('json',false,$eventId);
 
     $oresult = json_decode($result);
@@ -17,7 +19,7 @@ function deleteEvent($eventId){
     }
     else {
         error_log("Error from bookitit: " . $oresult->event->id . " ". $oresult->event->message);
-        throw new Exception("Error deleting date $id from day $this->date, we will retry $retries more time(s)");
+        throw new \Exception("Error deleting date $eventId");
     }
 
 }
