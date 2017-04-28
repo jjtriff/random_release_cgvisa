@@ -15,6 +15,9 @@ $db = new JsonCollection();
 //printear en el log las configs iniciales que se leyeron para que queden
 print_initial_configs($ini_array);
 
+//poner algunas variables de las iniciales en el scope Global para poder usarlas
+$GLOBALS['free.ini'] = $ini_array;
+
 //hacer los calculos iniciales:
 //que momento es este del dia
 //hora en que se van a abrir turnos
