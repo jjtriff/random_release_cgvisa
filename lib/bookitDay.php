@@ -203,9 +203,9 @@ class BookitDay extends StdClass
 // $b = Randomize\someFromArray($a, 2);
 // print_r ($b);
 
-$ini_array = parse_ini_file('../visado.ini');
-$GLOBALS['free.ini'] = $ini_array;
-$GLOBALS['free.ini']['reservation_name'] = "jj";
+// $ini_array = parse_ini_file('../visado.ini');
+// $GLOBALS['free.ini'] = $ini_array;
+// $GLOBALS['free.ini']['reservation_name'] = "jj";
 
 // $d->releaseDates(3);
 
@@ -220,15 +220,15 @@ $GLOBALS['free.ini']['reservation_name'] = "jj";
 
 // $d->updateDay();
 
-$db = new JsonCollection();
-foreach ($db->col as $key => $value) {
-  $d = unserialize($value);
-  // $d = new BookitDay($key);
-  // $d->updateDay();
-  // print_r((array)$d);
-  $d->releaseDay();
-  $db->col[$d->date] = serialize($d);
-}
+// $db = new JsonCollection();
+// foreach ($db->col as $key => $value) {
+//   $d = unserialize($value);
+//   // $d = new BookitDay($key);
+//   // $d->updateDay();
+//   // print_r((array)$d);
+//   $d->releaseDay();
+//   $db->col[$d->date] = serialize($d);
+// }
 
 
 
