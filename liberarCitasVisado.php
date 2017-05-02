@@ -1,17 +1,17 @@
 <?php
 
 // libs to import
+include('lib/main.php');
 include('lib/jsoncollection.php');
 
 //establecer contacto con la base de datos local
 $db = new JsonCollection();
 
-
-//poner a loggear todos los errores y todo todo al archivo local de log
-// ini_set('error_log', $ini_array['log_name'].date('Ymd-Hi').".log");
-
 //leer la configuraciones iniciales
 $ini_array = parse_ini_file('visado.ini');
+//poner a loggear todos los errores y todo todo al archivo local de log
+ini_set('error_log', 'logs/'.$ini_array['log_name'].date('Ymd-Hi').".log");
+
 //printear en el log las configs iniciales que se leyeron para que queden
 print_initial_configs($ini_array);
 
