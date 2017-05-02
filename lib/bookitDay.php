@@ -42,10 +42,10 @@ class BookitDay extends StdClass
         $GLOBALS['free.ini']['reservation_comment']
       );
       $retries = $GLOBALS['free.ini']['retries'];     
-      $this->prereserve($agenda, $service, $client, $retries);
+      $this->_prereserve($agenda, $service, $client, $retries);
     }
 
-    public function prereserve($agenda, $service, $client, $retries)
+    public function _prereserve($agenda, $service, $client, $retries)
     {
       $oRestClient = new CRestClient();
 
@@ -109,18 +109,24 @@ class BookitDay extends StdClass
           $retries--;
         }
       }
-      $totalp = count($this->preservations);
+      $totalp = count($this->prereservations);
       error_log("Reservados un total de $totalp para el d'ia $this->date, para la agenda $agenda");
     }
 
-    public function releaseDates($howMany, $retries)
+    public function releaseEvents($howMany)
+    {
+      $retries = (int)$GLOBALS['free.ini']['retries'];
+      return $this->_releaseEvents($howMany, $retries);
+    }
+
+    public function _releaseEvents($howMany, $retries)
     {
       //buscar random en el array tantos como $howMany
       $selected = Randomize\someFromArray($this->prereservations, $howMany);
       //con cada uno de esos mandarlo a eliminar en el sistema
       foreach ($selected as $key => $eventId) {
         $ret = $retries;
-          while($ret <= 0){
+          while($ret >= 0){
             try{
                 $forDeletion = CGHAB\BookititClient\deleteEvent($eventId);
                 break;
@@ -131,9 +137,48 @@ class BookitDay extends StdClass
           }
         //si se elimina ok eliminarlo del array
         if($forDeletion){
-          unset($this->preservations[$key]);
+          unset($this->prereservations[$key]);
         }
       }
+
+      return true;
+    }
+
+    public function updateDay()
+    {
+      //pedir en booktit todos los eventos de esta fecha
+      $events = CGHAB\BookititClient\getDateEvents($this->date);
+      //seleccionar los que tengan el correo y el mail de reservacion
+      unset($this->prereservations);
+      $this->prereservations = array();
+      foreach ($events as $event) {
+      //limpiar el array de preservas y llenarlo con las nuevas encontradas
+        if($event->user_name == $GLOBALS['free.ini']['reservation_name'])
+          $this->prereservations[] = $event->id;
+      }
+    }
+
+    public function releaseDay(){
+      //con cada uno de esos mandarlo a eliminar en el sistema
+      foreach ($this->prereservations as $key => $eventId) {
+        $ret = $GLOBALS['free.ini']['retries'] ;
+          while($ret >= 0){
+            try{
+                $forDeletion = CGHAB\BookititClient\deleteEvent($eventId);
+                error_log("Eliminado evento $eventId del dia $this->date");
+                break;
+            } catch (Exception $e){
+              error_log($e->getMessage());
+              $ret--;
+            }
+          }
+        //si se elimina ok eliminarlo del array
+        if($forDeletion){
+          unset($this->prereservations[$key]);
+        }
+      }
+
+      return true;
     }
 }
 
@@ -144,8 +189,8 @@ class BookitDay extends StdClass
 
 // $d->prereserve("bkt103664", "bkt219175", $u, 1 );
 
-$db = new JsonCollection();
-$d = unserialize($db->col["2017-10-17"]);
+// $db = new JsonCollection();
+// $d = unserialize($db->col["2017-10-17"]);
 // $nd = new BookitDay($d->date);
 // $nd->mapper($d);
 
@@ -158,10 +203,35 @@ $d = unserialize($db->col["2017-10-17"]);
 // $b = Randomize\someFromArray($a, 2);
 // print_r ($b);
 
-$d->releaseDate() $
+$ini_array = parse_ini_file('../visado.ini');
+$GLOBALS['free.ini'] = $ini_array;
+$GLOBALS['free.ini']['reservation_name'] = "jj";
+
+// $d->releaseDates(3);
+
+
+// $db = new JsonCollection();
+// $d = ($db->col["2017-10-16"]);
+// $bd = new BookitDay("2017-10-16");
+// $bd->mapper((object)$d);
+// $d = $bd;
 
 
 
-print $d->date;
+// $d->updateDay();
+
+$db = new JsonCollection();
+foreach ($db->col as $key => $value) {
+  $d = unserialize($value);
+  // $d = new BookitDay($key);
+  // $d->updateDay();
+  // print_r((array)$d);
+  $d->releaseDay();
+  $db->col[$d->date] = serialize($d);
+}
+
+
+
+// print $d->date;
 
 
