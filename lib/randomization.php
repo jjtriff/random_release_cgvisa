@@ -15,9 +15,9 @@ function someFromArray($array, $howMany)
     return $selected;
 }
 
-function selectMinuteFromNow(int $rangeInHours){
+function selectMinuteFromNow(int $rangeInMinutes){
     $now = strtotime("now");
-    $secsFromNow = strtotime("$rangeInHours hours");
+    $secsFromNow = strtotime("$rangeInMinutes minutes");
     $_ret = mt_rand(15, $secsFromNow - $now) % 60;
     // error_log("selected minute: $_ret");
     return $_ret;
