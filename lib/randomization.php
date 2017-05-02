@@ -15,6 +15,14 @@ function someFromArray($array, $howMany)
     return $selected;
 }
 
+function selectMinuteFromNow(int $rangeInHours){
+    $now = strtotime("now");
+    $secsFromNow = strtotime("$rangeInHours hours");
+    $_ret = mt_rand(15, $secsFromNow - $now) % 60;
+    // error_log("selected minute: $_ret");
+    return $_ret;
+}
+
 
 
 
@@ -23,3 +31,6 @@ function someFromArray($array, $howMany)
 // $a = ['a', 'b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 // $b = someFromArray($a, 2);
 // print_r ($b);
+
+// print date("H:i")."\n";
+// print date("H:i", strtotime(selectMinuteFromNow(1)." minutes"));
