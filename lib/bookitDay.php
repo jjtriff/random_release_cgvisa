@@ -15,6 +15,7 @@ class BookitDay extends StdClass
 {
     public $date;
     public $exec_count = 0;
+    protected $opened = false;
     // esta sera una lista de los id de los turnos preservados 
     public $prereservations = array();
     
@@ -111,6 +112,7 @@ class BookitDay extends StdClass
       }
       $totalp = count($this->prereservations);
       error_log("Reservados un total de $totalp para el d'ia $this->date, para la agenda $agenda");
+      $this->opened = false;
     }
 
     public function releaseEvents($howMany)
@@ -140,7 +142,7 @@ class BookitDay extends StdClass
           unset($this->prereservations[$key]);
         }
       }
-
+      $this->opened = true;
       return true;
     }
 
