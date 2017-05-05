@@ -15,10 +15,14 @@ function someFromArray($array, $howMany)
     return $selected;
 }
 
+
+/**
+* returns a number which is the selected minute from now within the Range param
+*/
 function selectMinuteFromNow(int $rangeInMinutes){
     $now = strtotime("now");
     $secsFromNow = strtotime("$rangeInMinutes minutes");
-    $_ret = mt_rand(15, $secsFromNow - $now) % 60;
+    $_ret = intdiv(mt_rand(15, $secsFromNow - $now), 60);
     // error_log("selected minute: $_ret");
     return $_ret;
 }
@@ -33,4 +37,7 @@ function selectMinuteFromNow(int $rangeInMinutes){
 // print_r ($b);
 
 // print date("H:i")."\n";
-// print date("H:i", strtotime(selectMinuteFromNow(1)." minutes"));
+// for ($i=0; $i < 15; $i++) { 
+//     print date("H:i", strtotime(selectMinuteFromNow(10)." minutes"))."\n";
+//     # code...
+// }
