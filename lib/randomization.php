@@ -5,13 +5,40 @@ namespace Randomize;
 * Devuelve un array que tiene key => valor de los que se seleccionen
 * random en el array
 */
-function someFromArray($array, $howMany)
+function someFromArray($array, $howMany, $eligible = null)
 {
     $selected = array();
-    $b = array_rand($array, $howMany);
-    foreach ($b as $key) {
-        $selected[$key] = $array[$key];
+    if($howMany > count($array))
+        throw new OutOfBoundsException("The amount of requested random elements is greater than the elements in the array");
+        
+    //tantas veces como howMany
+    $i = 0;
+    while ( $i < $howMany) { 
+        // busca un key random en el array
+        $key = array_rand($array);
+        $elected = true;
+        //si la funcion eligible existe
+        if($eligible){
+            //usala para determinar si ese element se puede usar
+            $elected = $eligible($array[$key]);
+            // si se puede usar
+            if($elected){
+                //ponlo con los seleccionados
+                $selected[$key] = $array[$key];
+            }
+        }
+        // sino existe eligible
+        else{
+            // ponlo en el array seleccionado
+            $selected[$key] = $array[$key];
+        }
+        //siempre hay q sacarlo del array original
+        unset($array[$key]);
+
+        //si fue seleccionado entonces aumentar el counter
+        $i = $elected? $i + 1 : $i;
     }
+
     return $selected;
 }
 
@@ -41,3 +68,14 @@ function selectMinuteFromNow(int $rangeInMinutes){
 //     print date("H:i", strtotime(selectMinuteFromNow(10)." minutes"))."\n";
 //     # code...
 // }
+
+// $a = [1,2,3,4,5,6];
+// $b = someFromArray($a, 3);
+// $electionDay = function ($value)
+// {
+//     return $value <= 3;
+// };
+
+// $b = someFromArray($a, 1, $electionDay);
+
+// print_r($b);
