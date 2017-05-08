@@ -18,6 +18,11 @@ class BookitDay extends StdClass
     protected $opened = false;
     // esta sera una lista de los id de los turnos preservados 
     public $prereservations = array();
+
+    public function isOpen()
+    {
+      return $this->opened;
+    }
     
     public function __construct($date)
     {
