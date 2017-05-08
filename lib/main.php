@@ -53,7 +53,7 @@ function initial_calculations(array $dbcol)
     $time_to_execute_lap = Randomize\SelectMinuteFromNow($time_window * 60);
 
     // BEGIN: hasta que fecha se va a reservar nuevos turnos
-    $reserve_until_date = date("Y-m-d", strtotime("$reservation_period days"));
+    $reserve_until_date = strtotime("$reservation_period days");
 
     //determinar primero la cantidad de turnos q se abriran para los proximos 15 dias
     $nextDays = array();
@@ -71,11 +71,31 @@ function initial_calculations(array $dbcol)
     }
 
 
-    // BEGIN: cuales de los dias m'as all'a de 15 son los escogidos para repartir esos turnos
-    $farDays = array_slice($dbcol, count($closer_days)+1);
-    $selectedFarDays = array();
-    for ($i=0; $i < $slots2open4farDays; $i++) { 
-        
+    // BEGIN: turnos en dias distantes que se van a repartir en este lap
+    if(!$last_lap){
+        $thisLapFarSlots = intdiv($slots2open4farDays, $times_to_open);
+    }
+    else{
+        $thisLapFarSlots = intdiv($slots2open4farDays, $times_to_open) + $slots2open4farDays % $times_to_open;
     }
 
+    // BEGIN: cuales de los dias m'as all'a de 15 son los escogidos para repartir esos turnos de este lap
+    $farDays = array_slice($dbcol, count($closer_days)+1);
+    $InRangeAndNotOpenedYet = function ($unserializedBookitDay)
+        {
+            $bd = unserialize($unserializedBookitDay);
+            if($bd->isOpen() && $bd->date > $reserve_until_date)
+                return false;
+            return true;
+        };
+    $selectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYet);
+
+
 }
+
+/**
+*   TESTS
+*/
+
+// $reservation_period = 4;
+// print date("Ymd", strtotime("$reservation_period days"));

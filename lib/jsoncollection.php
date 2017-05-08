@@ -25,7 +25,7 @@ class JsonCollection
 
     public function addDay(BookitDay $day)
     {
-        $this->col[$day->date] = serialize($day);
+        $this->col[$day->Date()] = serialize($day);
     }
 
     public function getDay(string $date)
