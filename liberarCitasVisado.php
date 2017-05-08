@@ -20,12 +20,15 @@ $GLOBALS['free.ini'] = $ini_array;
 
 //hacer los calculos iniciales:
 //que momento es este del dia
+$sToday = date("Y-m-d");
+$bDay = $db->getDay($sToday);
+$GLOBALS['free.ini']['times_opened_today'] = $bDay->exec_count;
 //hora en que se van a abrir turnos
 //hasta que fecha se va a reservar nuevos turnos
 //cuantos turnos por dia se han calculado a partir del dia de hoy
 //cuantos turnos se van a repartir mas alla de los 15 primeros dias
 //cuales de los dias m'as all'a de 15 son los escogidos para repartir esos turnos
-$decisions = initial_calculations($ini_array);
+$decisions = initial_calculations($db->col);
 
 //printearlos en el log para que quede
 print_initial_decisions($decisions);

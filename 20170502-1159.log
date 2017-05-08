@@ -1,0 +1,4 @@
+[02-May-2017 11:59:48 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function print_initial_configs() in /home/jtriff/workspace/visado/liberarCitasVisado.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/jtriff/workspace/visado/liberarCitasVisado.php on line 16

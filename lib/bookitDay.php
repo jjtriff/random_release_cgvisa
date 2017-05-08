@@ -187,6 +187,23 @@ class BookitDay extends StdClass
 
       return true;
     }
+
+    /**
+    * Devuelve la fecha en str para usar por bookit, y asigna la fecha al att date q es un timestamp
+    * q es usable despues para calcular
+    * @return if strDate == null String date for the day in the format YYYY-MM-DD
+    * @return true if strDate es una fecha valida, false otherwise
+    */
+    public function Date($strDate = null)
+    {
+      if($strDate == null){
+        return date("Y-m-d", $this->date);
+      }
+
+      $this->date = strtotime($strDate);
+      return ($this->date)? true : false;
+
+    }
 }
 
 
