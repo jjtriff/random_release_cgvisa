@@ -26,7 +26,7 @@ class BookitDay extends StdClass
     
     public function __construct($date)
     {
-       $this->date = $date;
+       $this->Date($date);
     }
 
     public function mapper(StdClass $bookitDay){
@@ -65,7 +65,7 @@ class BookitDay extends StdClass
         {
         //buscar los huecos libres del dia de hoy
           $sReturn = $oRestClient->getFreeSlots($service,
-          $agenda, $this->date, "json", false);
+          $agenda, $this->Date(), "json", false);
 
           $hours = json_decode($sReturn);
           if($hours->slots->status == "true"){
@@ -76,14 +76,14 @@ class BookitDay extends StdClass
           }
 
           if(count($hours) == 0)
-            throw new Exception("We ran out of free slots for day $this->date", 1);
+            throw new Exception("We ran out of free slots for day {$this->Date()}", 1);
 
           $client->dni = null;
           foreach ($hours as $time) {
               $sReturn = $oRestClient->addEvent( $agenda,
                 $service,
-                $this->date,
-                $this->date,
+                $this->Date(),
+                $this->Date(),
                 $oRestClient->renderMinutes($time),
                 $oRestClient->renderMinutes(date('H:i', strtotime("$time +1 hour"))),
                 "",
@@ -107,7 +107,7 @@ class BookitDay extends StdClass
                 $this->prereservations[] = $oObject->event->id;
               }
               else{
-                throw new Exception("An error when trying to prereserve on day $this->date, hour $time");
+                throw new Exception("An error when trying to prereserve on day {$this->Date()}, hour $time");
               }
 
           }
@@ -116,7 +116,7 @@ class BookitDay extends StdClass
         }
       }
       $totalp = count($this->prereservations);
-      error_log("Reservados un total de $totalp para el d'ia $this->date, para la agenda $agenda");
+      error_log("Reservados un total de $totalp para el d'ia {$this->Date()}, para la agenda $agenda");
       $this->open = false;
     }
 
@@ -154,7 +154,7 @@ class BookitDay extends StdClass
     public function updateDay()
     {
       //pedir en booktit todos los eventos de esta fecha
-      $events = CGHAB\BookititClient\getDateEvents($this->date);
+      $events = CGHAB\BookititClient\getDateEvents($this->Date());
       //seleccionar los que tengan el correo y el mail de reservacion
       unset($this->prereservations);
       $this->prereservations = array();
@@ -172,7 +172,7 @@ class BookitDay extends StdClass
           while($ret >= 0){
             try{
                 $forDeletion = CGHAB\BookititClient\deleteEvent($eventId);
-                error_log("Eliminado evento $eventId del dia $this->date");
+                error_log("Eliminado evento $eventId del dia {$this->Date()}");
                 break;
             } catch (Exception $e){
               error_log($e->getMessage());
@@ -202,7 +202,6 @@ class BookitDay extends StdClass
 
       $this->date = strtotime($strDate);
       return ($this->date)? true : false;
-
     }
 }
 
@@ -258,4 +257,24 @@ class BookitDay extends StdClass
 
 // print $d->date;
 
+// /**
+//  * 
+//  */
+// class test 
+// {
+  
+//   function __construct()
+//   {
+//     # code...
+//   }
+//   function test()
+//   {
+//     return "2017-05";
+//   }
 
+// }
+
+
+// $tes = new test();
+
+// print "lala {$tes->test()}";
