@@ -20,8 +20,8 @@ $GLOBALS['free.ini'] = $ini_array;
 
 //hacer los calculos iniciales:
 //que momento es este del dia
-$sToday = date("Y-m-d");
-$bDay = $db->getDay($sToday);
+$today = time();
+$bDay = $db->getDay(date("Y-m-d", $today));
 $GLOBALS['free.ini']['times_opened_today'] = $bDay->exec_count;
 //hora en que se van a abrir turnos
 //hasta que fecha se va a reservar nuevos turnos
