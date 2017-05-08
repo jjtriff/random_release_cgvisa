@@ -90,7 +90,14 @@ function initial_calculations(array $dbcol)
         };
     $selectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYet);
 
+    return compact($time_to_execute_lap,$times_opened_today,$lap,
+        $last_lap,$total_slots,$slots2open4nextDay,$nextDays,
+        $reserve_until_date,$slots2open4farDays,$selectedFarDays);
+}
 
+function print_initial_decisions($decisions){
+    error_log('Decisions for this lap');
+    error_log(print_r($decisions));
 }
 
 /**
