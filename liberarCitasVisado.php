@@ -12,11 +12,11 @@ $ini_array = parse_ini_file('visado.ini');
 //poner a loggear todos los errores y todo todo al archivo local de log
 ini_set('error_log', 'logs/'.$ini_array['log_name'].date('Ymd-Hi').".log");
 
-//printear en el log las configs iniciales que se leyeron para que queden
-print_initial_configs($ini_array);
-
 //poner algunas variables de las iniciales en el scope Global para poder usarlas
 $GLOBALS['free.ini'] = $ini_array;
+
+//printear en el log las configs iniciales que se leyeron para que queden
+print_initial_configs($ini_array);
 
 // reservar los nuevos turnos hasta la fecha que se haya decidido
 $until_date = strtotime($GLOBALS['free.ini']['reservation_period']." days");
