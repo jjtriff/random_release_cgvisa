@@ -147,8 +147,8 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
 // $GLOBALS['free.ini'] = $ini_array;
 
 
-// $to = strtotime("2017-11-05");
-// $from = strtotime("2017-10-30");
+// // $to = strtotime("2017-11-05");
+// // $from = strtotime("2017-10-30");
 
 // $db = new JsonCollection();
 
@@ -164,4 +164,14 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
 // $bd->releaseEvents(2);
 // print_r($bd);
 // $db->addDay($bd);
+
+// foreach ($db->col as $key => $value) {
+//     $bd = unserialize($value);
+//     print_r($bd);
+//     $bd->releaseEvents(11);
+//     print_r($bd);
+//     $db->addDay($bd);
+// }
+
+
 
