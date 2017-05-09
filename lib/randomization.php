@@ -9,7 +9,7 @@ function someFromArray($array, $howMany, $eligible = null)
 {
     $selected = array();
     if($howMany > count($array))
-        throw new OutOfBoundsException("The amount of requested random elements is greater than the elements in the array");
+        throw new \OutOfBoundsException("The amount of requested random elements is greater than the elements in the array");
         
     //tantas veces como howMany
     $i = 0;
