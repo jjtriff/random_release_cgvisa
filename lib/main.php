@@ -1,6 +1,7 @@
 <?php
 
 require_once("randomization.php");
+require_once("jsoncollection.php");
 
 function print_initial_configs($ini_array){
     // error_log("Capacidad del departamento de visado es: $ini_array[dept_capacity] personas diarias");
@@ -137,4 +138,30 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
 // $reservation_period = 4;
 // print date("Ymd", strtotime("$reservation_period days"));
 
-// $to = strtotime("")
+// // leer la configuraciones iniciales
+// $ini_array = parse_ini_file('../visado.ini');
+// //poner a loggear todos los errores y todo todo al archivo local de log
+// // ini_set('error_log', 'logs/'.$ini_array['log_name'].date('Ymd-Hi').".log");
+
+// //poner algunas variables de las iniciales en el scope Global para poder usarlas
+// $GLOBALS['free.ini'] = $ini_array;
+
+
+// $to = strtotime("2017-11-05");
+// $from = strtotime("2017-10-30");
+
+// $db = new JsonCollection();
+
+// reserve_until_date($db->col, $to, $from);
+// print_r($db);
+
+// $bd = $db->getDay("2017-11-03");
+// $bd->updateDay();
+// print_r($bd);
+// $db->addDay($bd);
+// print_r ($bd);
+// print($bd->Date());
+// $bd->releaseEvents(2);
+// print_r($bd);
+// $db->addDay($bd);
+
