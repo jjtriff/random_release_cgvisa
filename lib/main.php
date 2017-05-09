@@ -100,6 +100,24 @@ function print_initial_decisions($decisions){
     error_log(print_r($decisions));
 }
 
+function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fromDateTimeStamp = null)
+{
+    $fromDateTimeStamp = ($fromDateTimeStamp == null) ? time() : $fromDateTimeStamp;
+
+    //generate dates from fromDate + 1 day to dateTimeStamp
+    do {
+        $fromDateTimeStamp = $fromDateTimeStamp + 24*3600;
+        // if the date is already inside the collection is not necessary to preserve it again
+        $strdate = date('Y-m-d', $fromDateTimeStamp);
+        if(!array_key_exists($strdate, $serializedBookitDays)){
+            $bd = new BookitDay($strdate);
+            $bd->prereserve();
+            $serializedBookitDays[$strdate] = serialize($bd);
+        }
+        
+    } while ($fromDateTimeStamp < $toDateTimeStamp);
+}
+
 /**
 *   TESTS
 */
