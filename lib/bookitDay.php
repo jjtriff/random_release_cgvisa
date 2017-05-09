@@ -129,7 +129,14 @@ class BookitDay extends StdClass
     public function _releaseEvents($howMany, $retries)
     {
       //buscar random en el array tantos como $howMany
-      $selected = Randomize\someFromArray($this->prereservations, $howMany);
+      try{
+        $selected = Randomize\someFromArray($this->prereservations, $howMany);
+      } catch (OutOfBoundsException $e){
+        $_count = count($this->prereservations);
+        error_log("The amount of dates/events to release ($howMany) is more than the existing reservations ($_count) for day {$this->Date()}. Every event in the day will be released.");
+        $selected = [];
+        $this->releaseDay();
+      }
       //con cada uno de esos mandarlo a eliminar en el sistema
       foreach ($selected as $key => $eventId) {
         $ret = $retries;
@@ -275,6 +282,9 @@ class BookitDay extends StdClass
 // }
 
 
-// $tes = new test();
+// function aplusb($a, $b)
+// {
+//   return $a + $b;
+// }
 
-// print "lala {$tes->test()}";
+// print "esto es {aplusb(3, 4)}";
