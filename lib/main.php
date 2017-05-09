@@ -100,9 +100,21 @@ function print_initial_decisions($decisions){
     error_log(print_r($decisions));
 }
 
+/**
+ * Reserves every slots in days from one date to another
+ *
+ * looks dates in the array, if they are not there it creates it as a new bookitDay object, preserves
+ * that day completly and stores it inside the collection, serializing it first.
+ *
+ * @param array $serializedBookitDays Collection of the serialized bookitdays
+ * @param unixtimestamp $toDateTimeStamp Final date of reservations
+ * @param unixtimestamp $fromDateTimeStamp Date from which the reservations will start
+ **/
+
 function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fromDateTimeStamp = null)
 {
-    $fromDateTimeStamp = ($fromDateTimeStamp == null) ? time() : $fromDateTimeStamp;
+    $fromDateTimeStamp = ($fromDateTimeStamp == null) ? time() + 24*3600 : $fromDateTimeStamp;
+    $fromDateTimeStamp = $fromDateTimeStamp - 24*3600; # esto asegura q cuando comience el ciclo caiga en la fecha correcta
 
     //generate dates from fromDate + 1 day to dateTimeStamp
     do {
@@ -124,3 +136,5 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
 
 // $reservation_period = 4;
 // print date("Ymd", strtotime("$reservation_period days"));
+
+// $to = strtotime("")
