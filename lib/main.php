@@ -151,6 +151,31 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
 }
 
 /**
+ * Executes everything based in the decision array using the BookitDays collection
+ *
+ * @param array $decisions The array with every decision
+ * @param JsonCollection $db The db of BookitDays
+ * @param timestamp $now The timestamp of the hour that is used as 
+ * reference
+ **/
+function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
+{
+    $now = (!$now) ? time() : $now ;
+
+    // liberar primero los turnos de dias cercanos
+    // liberando la cantidad q especificada en $nextDays[key][thisLap]
+    foreach ($decisions['nextDays'] as $day => $slotsToOpen) {
+        // calcular dia basdo en now y en el $day
+        $date = date("Y-m-d", strtotime("$day days", $now));
+        $bd = $db->getDay($date);
+        $bd->releaseEvents($slotsToOpen['thisLap']);
+    }
+
+    // liberar los turnos de dias distantes
+    // 
+}
+
+/**
 *   TESTS
 */
 
