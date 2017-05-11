@@ -96,6 +96,7 @@ function initial_calculations(array $dbcol, $now = null)
             return true;
         };
     $selectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYet);
+    $selectedFarDays = array_keys($selectedFarDays);
 
     return compact($execute_minute,$times_opened_today,$lap,
         $last_lap,$total_slots,$slots2open4nextDay,$nextDays,
