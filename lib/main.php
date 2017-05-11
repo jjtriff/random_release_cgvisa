@@ -16,6 +16,8 @@ function print_initial_configs($ini_array){
 }
 
 /**
+* makes the calculations and decides what days to open, etc
+*
 * hacer los calculos iniciales:
 * que momento es este del dia
 * cantidad d turnos a abrir hoy esparcidos entre los X meses
@@ -25,11 +27,15 @@ function print_initial_configs($ini_array){
 * cuantos turnos por dia se han calculado a partir del dia de hoy hasta los proximos 15 dias
 * cuantos turnos se van a repartir mas alla de los 15 primeros dias
 * cuales de los dias m'as all'a de 15 son los escogidos para repartir esos turnos
-*/
-
-
-function initial_calculations(array $dbcol)
+*
+* @param array $dbcol The collection of days in the db to explore them and
+* make the decisions
+* @param timestamp $now = time() The timestamp of the hour that is used as 
+* reference
+**/
+function initial_calculations(array $dbcol, $now = null)
 {
+    $now = (!$now) ? time() : $now ;
     
     extract($GLOBALS['free.ini']);
     // BEGIN: que momento es este del dia
@@ -54,7 +60,7 @@ function initial_calculations(array $dbcol)
     $execute_minute = Randomize\SelectMinuteFromNow($time_window * 60);
 
     // BEGIN: hasta que fecha se va a reservar nuevos turnos
-    $reserve_until_date = strtotime("$reservation_period days");
+    $reserve_until_date = strtotime("$reservation_period days", $now);
 
     //determinar primero la cantidad de turnos q se abriran para los proximos 15 dias
     $nextDays = array();
