@@ -96,9 +96,22 @@ function initial_calculations(array $dbcol)
         $reserve_until_date,$slots2open4farDays,$selectedFarDays);
 }
 
-function print_initial_decisions($decisions){
+/**
+ * prints into the log the array of decisions
+ *
+ * @param array $decisions The array of decisions made somewhere else
+ * @param timestamp $now The timestamp of the hour that is used as 
+ * reference
+ **/
+function print_initial_decisions($decisions, $now = null){
     error_log('Decisions for this lap');
     error_log(print_r($decisions));
+    $now = (!$now) ? time() : $now ;
+    $will_exec = strtotime($decisions['execute_minute']." minutes", $now);
+    error_log(
+        "Will execute decisions around: ".
+    date("Y-m-d H:i:s", $will_exec)
+    );
 }
 
 /**
