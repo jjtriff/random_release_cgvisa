@@ -19,7 +19,7 @@ $GLOBALS['free.ini'] = $ini_array;
 print_initial_configs($ini_array);
 
 //que momento es este del dia
-$today = ($GLOBALS['free.ini']['simulate']) ? $argv[1] : time();
+$today = ($GLOBALS['free.ini']['simulate']) ? strtotime($argv[1]) : time();
 
 // reservar los nuevos turnos hasta la fecha que se haya decidido
 $until_date = strtotime($GLOBALS['free.ini']['reservation_period']." days", $today);
