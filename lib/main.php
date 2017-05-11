@@ -173,7 +173,11 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
     }
 
     // liberar los turnos de dias distantes
-    // 
+    foreach ($decisions['selectedFarDays'] as $sDay ) {
+        $bd = $db->getDay($sDay);
+        $bd->releaseEvents(1);
+    }
+    
 }
 
 /**
