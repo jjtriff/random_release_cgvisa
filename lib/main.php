@@ -173,5 +173,9 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
 //     $db->addDay($bd);
 // }
 
+$t = strtotime("2017-05-13");
 
-
+echo date(
+"Y-m-d",
+strtotime("2 days", $t)
+);
