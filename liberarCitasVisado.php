@@ -53,7 +53,7 @@ try{
         sleep($decisions['execute_minute']*60);
         error_log("I'm back baby");
     } 
-    execute_decisions($decisions);
+    execute_decisions($decisions, $db);
 } catch (Exception $e){
     error_log($e->getMessage());
 }
