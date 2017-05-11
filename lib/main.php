@@ -51,7 +51,7 @@ function initial_calculations(array $dbcol)
     $slots2open4farDays = $total_slots - $slots2open4nextDays;
 
     // BEGIN: hora en que se van a abrir turnos
-    $time_to_execute_lap = Randomize\SelectMinuteFromNow($time_window * 60);
+    $execute_minute = Randomize\SelectMinuteFromNow($time_window * 60);
 
     // BEGIN: hasta que fecha se va a reservar nuevos turnos
     $reserve_until_date = strtotime("$reservation_period days");
@@ -91,7 +91,7 @@ function initial_calculations(array $dbcol)
         };
     $selectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYet);
 
-    return compact($time_to_execute_lap,$times_opened_today,$lap,
+    return compact($execute_minute,$times_opened_today,$lap,
         $last_lap,$total_slots,$slots2open4nextDay,$nextDays,
         $reserve_until_date,$slots2open4farDays,$selectedFarDays);
 }
@@ -173,9 +173,9 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
 //     $db->addDay($bd);
 // }
 
-$t = strtotime("2017-05-13");
+// $t = strtotime("2017-05-13");
 
-echo date(
-"Y-m-d",
-strtotime("2 days", $t)
-);
+// echo date(
+// "Y-m-d",
+// strtotime("2 days", $t)
+// );
