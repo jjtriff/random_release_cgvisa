@@ -169,6 +169,18 @@ class BookitDay extends StdClass
     }
 
     /**
+     * Increases the number of Execution counts for this day
+     *
+     * This is for using when the script uses this day to execute
+     *
+     * @return
+     **/
+    public function increaseExec()
+    {
+      $this->exec_count++;
+    }
+
+    /**
      * undocumented function summary
      *
      * Undocumented function long description
