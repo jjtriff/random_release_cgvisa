@@ -88,14 +88,14 @@ function initial_calculations(array $dbcol, $now = null)
 
     // BEGIN: cuales de los dias m'as all'a de 15 son los escogidos para repartir esos turnos de este lap
     $farDays = array_slice($dbcol, count($closer_days)+1);
-    $InRangeAndNotOpenedYet = function ($unserializedBookitDay)
+    $InRangeAndNotOpenedYetAndWithReservations = function ($unserializedBookitDay)
         {
             $bd = unserialize($unserializedBookitDay);
-            if($bd->isOpen() && $bd->date > $reserve_until_date)
+            if($bd->isOpen() && $bd->date > $reserve_until_date && $bd->hasReservations == 0)
                 return false;
             return true;
         };
-    $selectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYet);
+    $selectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYetAndWithReservations);
     $selectedFarDays = array_keys($selectedFarDays);
 
     return compact($execute_minute,$times_opened_today,$lap,
@@ -147,6 +147,33 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
             $bd->prereserve();
             $serializedBookitDays[$strdate] = serialize($bd);
         }
+        
+    } while ($fromDateTimeStamp < $toDateTimeStamp);
+}
+
+/**
+ * Scans days looking for already reserved events
+ *
+ * useful if somthing went wrong and you need to update the db
+ * 
+ * @param array $serializedBookitDays Collection of the serialized bookitdays
+ * @param unixtimestamp $toDateTimeStamp Final date of reservations
+ * @param unixtimestamp $fromDateTimeStamp Date from which the reservations will start
+ **/
+
+function update_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fromDateTimeStamp = null)
+{
+    $fromDateTimeStamp = ($fromDateTimeStamp == null) ? time() + 24*3600 : $fromDateTimeStamp;
+    $fromDateTimeStamp = $fromDateTimeStamp - 24*3600; # esto asegura q cuando comience el ciclo caiga en la fecha correcta
+
+    //scan dates from fromDate + 1 day to dateTimeStamp
+    do {
+        $fromDateTimeStamp = $fromDateTimeStamp + 24*3600;
+        // if the date is already inside the collection is not necessary to preserve it again
+        $strdate = date('Y-m-d', $fromDateTimeStamp);
+        $bd = new BookitDay($strdate);
+        $bd->updateDay();
+        $serializedBookitDays[$strdate] = serialize($bd);
         
     } while ($fromDateTimeStamp < $toDateTimeStamp);
 }
