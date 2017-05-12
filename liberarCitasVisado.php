@@ -2,7 +2,7 @@
 
 // libs to import
 include('lib/main.php');
-include('lib/jsoncollection.php');
+include_once('lib/jsoncollection.php');
 
 //establecer contacto con la base de datos local
 $db = new JsonCollection();
