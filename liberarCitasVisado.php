@@ -58,6 +58,8 @@ try{
     execute_decisions($decisions, $db, $today);
     // aumenta la cuenta de ejecuciones en este dia
     $bDay->increaseExec();
+    // put day back to the db
+    $db->addDay($bDay);
 } catch (Exception $e){
     error_log($e->getMessage());
 }
