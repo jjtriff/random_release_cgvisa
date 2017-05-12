@@ -23,6 +23,16 @@ class BookitDay extends StdClass
     {
       return $this->open;
     }
+
+    /**
+     * Returns if this day still has reserved events
+     *
+     * @return int The amount of actual prereservations 
+     **/
+    public function hasReservations()
+    {
+      return count($this->prereservations);
+    }
     
     public function __construct($date)
     {
@@ -158,19 +168,38 @@ class BookitDay extends StdClass
       return true;
     }
 
-    public function updateDay()
+    /**
+     * undocumented function summary
+     *
+     * Undocumented function long description
+     *
+     * @param type var Description
+     **/
+
+    public function updateDay($retries = null)
     {
-      //pedir en booktit todos los eventos de esta fecha
-      $events = CGHAB\BookititClient\getDateEvents($this->Date());
-      //seleccionar los que tengan el correo y el mail de reservacion
-      unset($this->prereservations);
-      $this->prereservations = array();
-      foreach ($events as $event) {
-      //limpiar el array de preservas y llenarlo con las nuevas encontradas
-        if($event->user_name == $GLOBALS['free.ini']['reservation_name'])
-          $this->prereservations[] = $event->id;
+      $ret = ($retries == null)?$GLOBALS['free.ini']['retries']:$retries;
+      while($ret >= 0){
+        try{
+          //pedir en booktit todos los eventos de esta fecha
+          $events = CGHAB\BookititClient\getDateEvents($this->Date());
+          unset($this->prereservations);
+          $this->prereservations = array();
+          foreach ($events as $event) {
+          //limpiar el array de preservas y llenarlo con las nuevas encontradas
+          //seleccionar los que tengan el correo y el mail de reservacion
+            if($event->user_name == $GLOBALS['free.ini']['reservation_name'])
+              $this->prereservations[] = $event->id;
+          }
+          error_log("Found ".count($this->prereservations)." events for day ".$this->Date());
+          break;
+        } catch (Exception $e){
+          error_log($e->getMessage());
+          if($ret == 0)
+            error_log("Found ".count($this->prereservations)." events for day ".$this->Date());
+          $ret--;
+        }
       }
-      error_log("Found ".count($this->prereservations)." events for day ".$this->Date());
     }
 
     public function releaseDay(){
