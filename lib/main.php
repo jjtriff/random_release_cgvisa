@@ -137,6 +137,7 @@ function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fro
 {
     $fromDateTimeStamp = ($fromDateTimeStamp == null) ? time() + 24*3600 : $fromDateTimeStamp;
     $fromDateTimeStamp = $fromDateTimeStamp - 24*3600; # esto asegura q cuando comience el ciclo caiga en la fecha correcta
+    error_log("Reserving events from ".date('Y-m-d',$fromDateTimeStamp)." to ".date('Y-m-d', $toDateTimeStamp).".");
 
     //generate dates from fromDate + 1 day to dateTimeStamp
     do {
@@ -166,6 +167,7 @@ function update_until_date(array &$serializedBookitDays, $toDateTimeStamp, $from
 {
     $fromDateTimeStamp = ($fromDateTimeStamp == null) ? time() + 24*3600 : $fromDateTimeStamp;
     $fromDateTimeStamp = $fromDateTimeStamp - 24*3600; # esto asegura q cuando comience el ciclo caiga en la fecha correcta
+    error_log("Searching for reserved events from ".date('Y-m-d',$fromDateTimeStamp)." to ".date('Y-m-d', $toDateTimeStamp).".");
 
     //scan dates from fromDate + 1 day to dateTimeStamp
     do {
