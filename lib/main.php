@@ -198,12 +198,16 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
         $date = date("Y-m-d", strtotime("$day days", $now));
         $bd = $db->getDay($date);
         $bd->releaseEvents($slotsToOpen['thisLap']);
+        // put BDay back into the db
+        $db->addDay($bd);
     }
 
     // liberar los turnos de dias distantes
     foreach ($decisions['thisLapSelectedFarDays'] as $sDay ) {
         $bd = $db->getDay($sDay);
         $bd->releaseEvents(1);
+        // put BDay back into the db
+        $db->addDay($bd);
     }
     
 }
