@@ -16,6 +16,9 @@ class JsonCollection
             if($st != false){
                 $this->col = json_decode($st, true);
             }
+            if ($this->col === null) {
+                $this->col = array();
+            }
     }
 
     public function __destruct()
