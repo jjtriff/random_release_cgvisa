@@ -18,6 +18,14 @@
             "program": "${file}",
             "cwd": "${fileDirname}",
             "port": 9000
+        },
+        {
+            "name": "Launch e2e",
+            "type": "php",
+            "request": "launch",
+            "program": "/home/jtriff/workspace/visado/e2e.php",
+            "cwd": "/home/jtriff/workspace/visado/",
+            "port": 9000
         }
     ]
 }
