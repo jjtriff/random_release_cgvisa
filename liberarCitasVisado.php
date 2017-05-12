@@ -10,7 +10,8 @@ $db = new JsonCollection();
 //leer la configuraciones iniciales
 $ini_array = parse_ini_file('visado.ini');
 //poner a loggear todos los errores y todo todo al archivo local de log
-ini_set('error_log', 'logs/'.$ini_array['log_name'].date('Ymd-Hi').".log");
+$log_name = (!$ini_array['debug']) ? $ini_array['log_name'].'-'.date('Ymd-Hi') : $ini_array['log_name'] ;
+ini_set('error_log', 'logs/'.$log_name.".log");
 
 //poner algunas variables de las iniciales en el scope Global para poder usarlas
 $GLOBALS['free.ini'] = $ini_array;
@@ -24,6 +25,7 @@ $today = ($GLOBALS['free.ini']['simulate']) ? strtotime($argv[1]) : time();
 // reservar los nuevos turnos hasta la fecha que se haya decidido
 $until_date = strtotime($GLOBALS['free.ini']['reservation_period']." days", $today);
 reserve_until_date($db->col, $until_date, $today);
+// update_until_date($db->col, $until_date, $today);
 
 //hacer los calculos iniciales:
 $bDay = $db->getDay(date("Y-m-d", $today));
@@ -54,6 +56,8 @@ try{
         error_log("I'm back baby");
     } 
     execute_decisions($decisions, $db);
+    // aumenta la cuenta de ejecuciones en este dia
+    $bDay->increaseExec();
 } catch (Exception $e){
     error_log($e->getMessage());
 }
