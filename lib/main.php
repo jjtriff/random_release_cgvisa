@@ -11,7 +11,7 @@ function print_initial_configs($ini_array){
     // error_log("Para los pr'oximos 15 d'ias se abrir'an un $cp % del total de las citas");
     // error_log("Los porcientos ")
     error_log('Initial settings');
-    error_log(print_r($ini_array));
+    error_log(print_r($ini_array, true));
 
 }
 
@@ -112,7 +112,7 @@ function initial_calculations(array $dbcol, $now = null)
  **/
 function print_initial_decisions($decisions, $now = null){
     error_log('Decisions for this lap');
-    error_log(print_r($decisions));
+    error_log(print_r($decisions, true));
     $now = (!$now) ? time() : $now ;
     $will_exec = strtotime($decisions['execute_minute']." minutes", $now);
     error_log(
