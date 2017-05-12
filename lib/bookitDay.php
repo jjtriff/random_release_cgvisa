@@ -170,6 +170,7 @@ class BookitDay extends StdClass
         if($event->user_name == $GLOBALS['free.ini']['reservation_name'])
           $this->prereservations[] = $event->id;
       }
+      error_log("Found ".count($this->prereservations)." events for day ".$this->Date());
     }
 
     public function releaseDay(){
