@@ -95,12 +95,12 @@ function initial_calculations(array $dbcol, $now = null)
                 return false;
             return true;
         };
-    $selectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYetAndWithReservations);
-    $selectedFarDays = array_keys($selectedFarDays);
+    $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYetAndWithReservations);
+    $thisLapSelectedFarDays = array_keys($thisLapSelectedFarDays);
 
     return compact('execute_minute','times_opened_today','lap',
         'last_lap','total_slots','slots2open4nextDays','nextDays',
-        'reserve_until_date','slots2open4farDays','selectedFarDays');
+        'reserve_until_date','slots2open4farDays','thisLapSelectedFarDays');
 }
 
 /**
@@ -112,6 +112,7 @@ function initial_calculations(array $dbcol, $now = null)
  **/
 function print_initial_decisions($decisions, $now = null){
     error_log('Decisions for this lap');
+    $decisions['reserve_until_date'] = date('Y-m-d', $decisions['reserve_until_date']);
     error_log(print_r($decisions, true));
     $now = (!$now) ? time() : $now ;
     $will_exec = strtotime($decisions['execute_minute']." minutes", $now);
@@ -200,7 +201,7 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
     }
 
     // liberar los turnos de dias distantes
-    foreach ($decisions['selectedFarDays'] as $sDay ) {
+    foreach ($decisions['thisLapSelectedFarDays'] as $sDay ) {
         $bd = $db->getDay($sDay);
         $bd->releaseEvents(1);
     }
