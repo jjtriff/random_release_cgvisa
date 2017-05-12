@@ -55,7 +55,7 @@ try{
         sleep($decisions['execute_minute']*60);
         error_log("I'm back baby");
     } 
-    execute_decisions($decisions, $db);
+    execute_decisions($decisions, $db, $today);
     // aumenta la cuenta de ejecuciones en este dia
     $bDay->increaseExec();
 } catch (Exception $e){
