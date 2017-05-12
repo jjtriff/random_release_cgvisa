@@ -48,10 +48,10 @@ function initial_calculations(array $dbcol, $now = null)
     $last_lap = $lap == $times_to_open;
 
     // BEGIN: cantidad d turnos a abrir hoy esparcidos entre los X meses
-    $total_slots = intdiv($dept_capacity, (1- $overbooking_percentage));
+    $total_slots = floor($dept_capacity / (1- $overbooking_percentage));
 
     // BEGIN: cuantos turnos por dia se han calculado a partir del dia de hoy hasta los proximos 15 dias
-    $slots2open4nextDays = $total_slots * $closest_days_percentage;
+    $slots2open4nextDays = round($total_slots * $closest_days_percentage);
     
     // BEGIN: cuantos turnos se van a repartir mas alla de los 15 primeros dias
     $slots2open4farDays = $total_slots - $slots2open4nextDays;
@@ -66,7 +66,7 @@ function initial_calculations(array $dbcol, $now = null)
     $nextDays = array();
 
     foreach ($closer_days as $key => $value) {
-        $thisDaySlots = $value * $slots2open4nextDays;
+        $thisDaySlots = round($value * $slots2open4nextDays);
         if(!$last_lap){
             $thisLapSlots = intdiv($thisDaySlots, $times_to_open);
         }
@@ -98,9 +98,9 @@ function initial_calculations(array $dbcol, $now = null)
     $selectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $InRangeAndNotOpenedYetAndWithReservations);
     $selectedFarDays = array_keys($selectedFarDays);
 
-    return compact($execute_minute,$times_opened_today,$lap,
-        $last_lap,$total_slots,$slots2open4nextDay,$nextDays,
-        $reserve_until_date,$slots2open4farDays,$selectedFarDays);
+    return compact('execute_minute','times_opened_today','lap',
+        'last_lap','total_slots','slots2open4nextDays','nextDays',
+        'reserve_until_date','slots2open4farDays','selectedFarDays');
 }
 
 /**
