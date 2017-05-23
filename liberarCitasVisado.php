@@ -26,6 +26,7 @@ $today = ($GLOBALS['free.ini']['simulate']) ? strtotime($argv[1]) : time();
 $until_date = strtotime($GLOBALS['free.ini']['reservation_period']." days", $today);
 reserve_until_date($db->col, $until_date, $today);
 // update_until_date($db->col, $until_date, $today);
+// exit;
 
 //hacer los calculos iniciales:
 $bDay = $db->getDay(date("Y-m-d", $today));
