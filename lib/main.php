@@ -246,7 +246,7 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
 // // $to = strtotime("2017-11-05");
 // // $from = strtotime("2017-10-30");
 
-$db = new JsonCollection('../localdb.json');
+// $db = new JsonCollection('../localdb.json');
 
 // reserve_until_date($db->col, $to, $from);
 // print_r($db);
