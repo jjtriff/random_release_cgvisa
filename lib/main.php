@@ -53,8 +53,6 @@ function initial_calculations(array $dbcol, $now = null)
     // BEGIN: cuantos turnos por dia se han calculado a partir del dia de hoy hasta los proximos 15 dias
     $slots2open4nextDays = round($total_slots * $closest_days_percentage);
     
-    // BEGIN: cuantos turnos se van a repartir mas alla de los 15 primeros dias
-    $slots2open4farDays = $total_slots - $slots2open4nextDays;
 
     // BEGIN: hora en que se van a abrir turnos
     $execute_minute = Randomize\SelectMinuteFromNow($time_window * 60);
@@ -77,6 +75,14 @@ function initial_calculations(array $dbcol, $now = null)
         $nextDays[$key+1] = ['slots' => $thisDaySlots, 'thisLap' => $thisLapSlots];
     }
 
+    // BEGIN: cuantos turnos se van a repartir mas alla de los 15 primeros dias
+    // Se calcula en base a lo q ya se ha repartido entre los cercanos 15 d'ias'
+    // para no desperdiciar turnos
+    $slots2open4nextDays = 0;
+    foreach ($nextDays as $key => $value) {
+        $slots2open4nextDays += $value['slots'];
+    }
+    $slots2open4farDays = $total_slots - $slots2open4nextDays;
 
     // BEGIN: turnos en dias distantes que se van a repartir en este lap
     if(!$last_lap){
@@ -195,11 +201,18 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
 
     // liberar primero los turnos de dias cercanos
     // liberando la cantidad q especificada en $nextDays[key][thisLap]
+    $first_time = true;
     foreach ($decisions['nextDays'] as $day => $slotsToOpen) {
         // calcular dia basdo en now y en el $day
         $date = date("Y-m-d", strtotime("$day days", $now));
         $bd = $db->getDay($date);
-        $bd->releaseEvents($slotsToOpen['thisLap']);
+        if($first_time && $decisions['last_lap']){
+            $first_time = false;
+            $bd->releaseDay();
+        }
+        else{
+            $bd->releaseEvents($slotsToOpen['thisLap']);
+        }
         // put BDay back into the db
         $db->addDay($bd);
     }
