@@ -87,11 +87,11 @@ function initial_calculations(array $dbcol, $now = null)
     }
 
     // BEGIN: cuales de los dias m'as all'a de 15 son los escogidos para repartir esos turnos de este lap
-    $farDays = array_slice($dbcol, count($closer_days)+1);
+    $farDays = array_slice($dbcol, count($closer_days)+1, -1);
     $InRangeAndNotOpenedYetAndWithReservations = function ($unserializedBookitDay)
         {
             $bd = unserialize($unserializedBookitDay);
-            if($bd->isOpen() && $bd->date > $reserve_until_date && $bd->hasReservations == 0)
+            if(!$bd->isOpen() && $bd->hasReservations() == 0)
                 return false;
             return true;
         };
@@ -136,8 +136,8 @@ function print_initial_decisions($decisions, $now = null){
 function reserve_until_date(array &$serializedBookitDays, $toDateTimeStamp, $fromDateTimeStamp = null)
 {
     $fromDateTimeStamp = ($fromDateTimeStamp == null) ? time() + 24*3600 : $fromDateTimeStamp;
-    $fromDateTimeStamp = $fromDateTimeStamp - 24*3600; # esto asegura q cuando comience el ciclo caiga en la fecha correcta
     error_log("Reserving events from ".date('Y-m-d',$fromDateTimeStamp)." to ".date('Y-m-d', $toDateTimeStamp).".");
+    $fromDateTimeStamp = $fromDateTimeStamp - 24*3600; # esto asegura q cuando comience el ciclo caiga en la fecha correcta que es el dia actual $fromDate
 
     //generate dates from fromDate + 1 day to dateTimeStamp
     do {
@@ -233,7 +233,7 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
 // // $to = strtotime("2017-11-05");
 // // $from = strtotime("2017-10-30");
 
-// $db = new JsonCollection();
+$db = new JsonCollection('../localdb.json');
 
 // reserve_until_date($db->col, $to, $from);
 // print_r($db);
