@@ -164,9 +164,10 @@ class BookitDay extends StdClass
           unset($this->prereservations[$key]);
         }
       }
-
-      $this->open = true;
-      error_log("We have release ".count($selected)." dates/events for day ".$this->Date().". This day is now open");
+      if(count($selected) > 0){
+        $this->open = true;
+        error_log("We have release ".count($selected)." dates/events for day ".$this->Date().". This day is now open");
+      }
       return true;
     }
 
