@@ -11,32 +11,39 @@ function someFromArray($array, $howMany, $eligible = null)
     if($howMany > count($array))
         throw new \OutOfBoundsException("The amount of requested random elements is greater than the elements in the array");
         
-    //tantas veces como howMany
-    $i = 0;
-    while ( $i < $howMany) { 
-        // busca un key random en el array
-        $key = array_rand($array);
-        $elected = true;
-        //si la funcion eligible existe
-        if($eligible){
-            //usala para determinar si ese element se puede usar
-            $elected = $eligible($array[$key]);
-            // si se puede usar
-            if($elected){
-                //ponlo con los seleccionados
+    
+    try{
+        //tantas veces como howMany
+        $i = 0;
+        $key = true;
+        while ( $i < $howMany && $key) { 
+            // busca un key random en el array
+            $key = array_rand($array);
+            $elected = false;
+            //si la funcion eligible existe
+            if($eligible && $key){ // si existe la funcion y key no es null
+                //usala para determinar si ese element se puede usar
+                $elected = $eligible($array[$key]);
+                // si se puede usar
+                if($elected){
+                    //ponlo con los seleccionados
+                    $selected[$key] = $array[$key];
+                }
+            }
+            // sino existe eligible
+            elseif ($key) {
+                // ponlo en el array seleccionado
                 $selected[$key] = $array[$key];
             }
-        }
-        // sino existe eligible
-        else{
-            // ponlo en el array seleccionado
-            $selected[$key] = $array[$key];
-        }
-        //siempre hay q sacarlo del array original
-        unset($array[$key]);
+            //siempre hay q sacarlo del array original
+            unset($array[$key]);
 
-        //si fue seleccionado entonces aumentar el counter
-        $i = $elected? $i + 1 : $i;
+            //si fue seleccionado entonces aumentar el counter
+            $i = $elected? $i + 1 : $i;
+        }
+
+    } catch (Exception $e){
+        error_log($e->getMessage());
     }
 
     return $selected;
