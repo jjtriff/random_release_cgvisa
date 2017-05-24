@@ -136,6 +136,13 @@ class BookitDay extends StdClass
       return $this->_releaseEvents($howMany, $retries);
     }
 
+    /**
+    * release events from the ones already prereserved
+    *
+    * @param int howMany The amount of events to release
+    * @param int retries The amount of times we are going to try to release in case there is a connection error
+    * @return int The amount of events finnally released
+    **/
     public function _releaseEvents($howMany, $retries)
     {
       //buscar random en el array tantos como $howMany
@@ -168,7 +175,7 @@ class BookitDay extends StdClass
         $this->open = true;
         error_log("We have release ".count($selected)." dates/events for day ".$this->Date().". This day is now open");
       }
-      return true;
+      return count($selected);
     }
 
     /**
