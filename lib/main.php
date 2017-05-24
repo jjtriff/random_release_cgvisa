@@ -82,7 +82,10 @@ function initial_calculations(array $dbcol, $now = null)
     foreach ($nextDays as $key => $value) {
         $slots2open4nextDays += $value['slots'];
     }
-    $slots2open4farDays = $total_slots - $slots2open4nextDays;
+
+    //incluir en Globals para usar en la funcion q no reserva, a no ser que tenga suficientes reservaciones
+    $GLOBALS['free.ini']['slots2open4nextDays'] = $slots2open4nextDays;
+    $slots2open4farDays = round(($total_slots - $slots2open4nextDays) * $reservation_period / count($closer_days));
 
     // BEGIN: turnos en dias distantes que se van a repartir en este lap
     if(!$last_lap){
