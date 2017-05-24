@@ -97,20 +97,15 @@ function initial_calculations(array $dbcol, $now = null)
 
     // BEGIN: cuales de los dias m'as all'a de 15 son los escogidos para repartir esos turnos de este lap
     $farDays = array_slice($dbcol, count($closer_days)+1, -1);
-    $NotOpenedYetAndWithReservations = function ($unserializedBookitDay)
-    {
-        $bd = unserialize($unserializedBookitDay);
-        if(!$bd->isOpen() && $bd->hasReservations() > 0)
-            return true;
-        return false;
-    };
+
     $WithReservations = function ($unserializedBookitDay)
     {
         $bd = unserialize($unserializedBookitDay);
-        if($bd->hasReservations() > 0)
+        if($bd->hasReservations() > $GLOBALS['free.ini']['slots2open4nextDays'])
             return true;
         return false;
     };
+
     $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $NotOpenedYetAndWithReservations);
     if(count($thisLapSelectedFarDays) <= 0){
         $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $WithReservations);
