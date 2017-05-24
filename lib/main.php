@@ -126,11 +126,9 @@ function print_initial_decisions($decisions, $now = null){
         "Will execute decisions around: ".
     date("Y-m-d H:i:s", $will_exec)
     );
+    error_log("This is lap number $decisions[lap]");
     if($decisions['last_lap']){
         error_log('This is the last lap');
-    }
-    else{
-        error_log("This is lap number $decisions[lap]");
     }
 }
 
