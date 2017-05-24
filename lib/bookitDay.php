@@ -224,13 +224,21 @@ class BookitDay extends StdClass
       }
     }
 
+/**
+ * releases every event preselected for this day acording to $this->preservation
+ * array
+ *
+ * @return int The amount of events released by this function.
+ **/
     public function releaseDay(){
       //con cada uno de esos mandarlo a eliminar en el sistema
       foreach ($this->prereservations as $key => $eventId) {
         $ret = $GLOBALS['free.ini']['retries'] ;
+        $count = 0
           while($ret >= 0){
             try{
                 $forDeletion = CGHAB\BookititClient\deleteEvent($eventId);
+                $count++;
                 error_log("Eliminado evento $eventId del dia {$this->Date()}");
                 break;
             } catch (Exception $e){
@@ -244,7 +252,7 @@ class BookitDay extends StdClass
         }
       }
 
-      return true;
+      return $count;
     }
 
     /**
