@@ -214,7 +214,8 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
         $bd = $db->getDay($date);
         if($first_time && $decisions['last_lap']){
             $first_time = false;
-            $bd->releaseDay();
+            $count_released = $bd->releaseDay();
+            error_log("We have release ".$count_released." dates/events for day ".$bd->Date().". This day is now open");
         }
         else{
             $bd->releaseEvents($slotsToOpen['thisLap']);
