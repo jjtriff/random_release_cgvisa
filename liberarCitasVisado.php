@@ -27,6 +27,15 @@ error_log("Today is ".date("Y-m-d, H:i", $today)." and is a beautiful day.");
 $until_date = strtotime($GLOBALS['free.ini']['reservation_period']." days", $today);
 reserve_until_date($db->col, $until_date, $today);
 // update_until_date($db->col, $until_date, $today);
+// explorar algunas fechas
+// update_until_date($db->col, strtotime("2018-01-05"), strtotime("2017-10-29"));
+
+// limpiarlas
+// foreach ($db->col as $serBD) {
+//     $bd = unserialize($serBD);
+//     $bd->releaseDay();
+// }
+
 // exit;
 
 //hacer los calculos iniciales:
