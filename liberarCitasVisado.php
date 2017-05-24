@@ -21,7 +21,7 @@ print_initial_configs($ini_array);
 
 //que momento es este del dia
 $today = ($GLOBALS['free.ini']['simulate']) ? strtotime($argv[1]) : time();
-error_log("Today is ".date("Y-m-d", $today)." and is a beautiful day.");
+error_log("Today is ".date("Y-m-d, H:i", $today)." and is a beautiful day.");
 
 // reservar los nuevos turnos hasta la fecha que se haya decidido
 $until_date = strtotime($GLOBALS['free.ini']['reservation_period']." days", $today);
