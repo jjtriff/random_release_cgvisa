@@ -34,6 +34,7 @@ function someFromArray($array, $howMany, $eligible = null)
             elseif ($key) {
                 // ponlo en el array seleccionado
                 $selected[$key] = $array[$key];
+                $elected = true;
             }
             //siempre hay q sacarlo del array original
             unset($array[$key]);
