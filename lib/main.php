@@ -94,26 +94,30 @@ function initial_calculations(array $dbcol, $now = null)
 
     // BEGIN: cuales de los dias m'as all'a de 15 son los escogidos para repartir esos turnos de este lap
     $farDays = array_slice($dbcol, count($closer_days)+1, -1);
-    $NotOpenedYetAndWithReservationsRelaxible = function ($unserializedBookitDay, $relaxed = false)
-        {
-            $bd = unserialize($unserializedBookitDay);
-            if($relaxed){
-                if($bd->hasReservations() > 0)
-                    return true;
-            }
-            else{ # strict
-                if(!$bd->isOpen() && $bd->hasReservations() > 0)
-                    return true;
-            }
-            
-            return false;
-        };
-    $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $NotOpenedYetAndWithReservationsRelaxible);
+    $NotOpenedYetAndWithReservations = function ($unserializedBookitDay)
+    {
+        $bd = unserialize($unserializedBookitDay);
+        if(!$bd->isOpen() && $bd->hasReservations() > 0)
+            return true;
+        return false;
+    };
+    $WithReservations = function ($unserializedBookitDay)
+    {
+        $bd = unserialize($unserializedBookitDay);
+        if($bd->hasReservations() > 0)
+            return true;
+        return false;
+    };
+    $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $NotOpenedYetAndWithReservations);
+    if(count($thisLapSelectedFarDays) <= 0){
+        $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $WithReservations);
+    }
+
     $thisLapSelectedFarDays = array_keys($thisLapSelectedFarDays);
 
     return compact('execute_minute','times_opened_today','lap',
         'last_lap','total_slots','slots2open4nextDays','nextDays',
-        'reserve_until_date','slots2open4farDays','thisLapSelectedFarDays');
+        'reserve_until_date','slots2open4farDays','thisLapFarSlots','thisLapSelectedFarDays');
 }
 
 /**
@@ -133,6 +137,9 @@ function print_initial_decisions($decisions, $now = null){
         "Will execute decisions around: ".
     date("Y-m-d H:i:s", $will_exec)
     );
+    if(count($decisions['thisLapSelectedFarDays']) < $decisions['thisLapFarSlots']){
+        error_log("Unable to find ($decisions[thisLapFarSlots]) enough random days to release events.");
+    }
     error_log("This is lap number $decisions[lap]");
     if($decisions['last_lap']){
         error_log('This is the last lap');
