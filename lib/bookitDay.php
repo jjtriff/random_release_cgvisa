@@ -232,9 +232,9 @@ class BookitDay extends StdClass
  **/
     public function releaseDay(){
       //con cada uno de esos mandarlo a eliminar en el sistema
+      $count = 0;
       foreach ($this->prereservations as $key => $eventId) {
         $ret = $GLOBALS['free.ini']['retries'] ;
-        $count = 0;
           while($ret >= 0){
             try{
                 $forDeletion = CGHAB\BookititClient\deleteEvent($eventId);
