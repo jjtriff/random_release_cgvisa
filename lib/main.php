@@ -2,6 +2,7 @@
 
 require_once("randomization.php");
 require_once("jsoncollection.php");
+require_once __DIR__ . '/../vendor/autoload.php';
 
 function print_initial_configs($ini_array){
     // error_log("Capacidad del departamento de visado es: $ini_array[dept_capacity] personas diarias");
@@ -106,10 +107,7 @@ function initial_calculations(array $dbcol, $now = null)
         return false;
     };
 
-    $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $NotOpenedYetAndWithReservations);
-    if(count($thisLapSelectedFarDays) <= 0){
-        $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $WithReservations);
-    }
+    $thisLapSelectedFarDays = Randomize\someFromArray($farDays, $thisLapFarSlots, $WithReservations);
 
     $thisLapSelectedFarDays = array_keys($thisLapSelectedFarDays);
 
@@ -244,9 +242,12 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
     
 }
 
+
 /**
 *   TESTS
 */
+
+// write_results_to_csv('results.csv', array());
 
 // $reservation_period = 4;
 // print date("Ymd", strtotime("$reservation_period days"));
