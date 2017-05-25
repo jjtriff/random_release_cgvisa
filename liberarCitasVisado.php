@@ -71,6 +71,9 @@ try{
     $bDay->increaseExec();
     // put day back to the db
     $db->addDay($bDay);
+    if($GLOBALS['free.ini']['simulate'] && $decisions['last_lap']){
+        write_results_to_csv('results.csv', $db->col, $today);
+    }
     unset($db);
 } catch (Exception $e){
     error_log($e->getMessage());

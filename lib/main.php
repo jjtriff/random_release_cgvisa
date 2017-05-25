@@ -242,6 +242,66 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
     
 }
 
+/**
+ * writes the result of released dates at the end of the day
+ *
+ * Undocumented function long description
+ *
+ * @param string $csvname The name of the csv file
+ * @param array $serializedBookitDays Array with all the days to explore
+ * @param array $decisions Array with the decisions made about department availability
+ * @param timestamp $date The name of the csv file
+ **/
+use League\Csv\Reader;
+use League\Csv\Writer;
+ 
+function write_results_to_csv($csvname, $serializedBookitDays, $decisions, $date = null){
+    $date = !$date ? time() : $date;
+
+    //read the csv 
+    $csv = Reader::createFromPath($csvname);
+    $csv->setDelimiter(';');
+    $GLOBALS['csvheaders'] = null;
+    $GLOBALS['csvrows'] = array();
+    $f = function ($row, $offset, $i){
+        if($offset == 0){
+            $GLOBALS['csvheaders'] = $row;
+            return true;
+        }
+        $GLOBALS['csvrows'][] = $row;
+        return true;
+    };
+    $csv->each($f);
+    //turn it into an array
+    $rs_objects = array();
+    foreach ($GLOBALS['csvrows'] as $row) {
+        $o = array();
+        foreach ($row as $index => $value) {
+            $o[$GLOBALS['csvheaders'][$index]] = $value;
+        }
+        $rs_objects[$o['V day | releases ->']] = $o;
+    }
+
+    //add the new results
+    $stoday = date('Y-m-d', $today);
+    $newres = ["V day | releases ->" => $stoday];
+    // go over the entire bookitDay collection
+    foreach ($serializedBookitDays as $day => $sBookitDay) {
+        $bd = unserialize($sBookitDay);
+        // calculating how many have been released 
+        $released = $total_slots - $bd->hasReservations();
+        $newres[$day] = $released;
+    }
+    
+    $rs_objects[$stoday] = $newres;
+
+    //back to csv
+    array_unshift($rs_objects, array_keys(end($rs_objects)));
+    $csvw = Writer::createFromPath('result2.csv', 'w+');
+    $csvw->setDelimiter(';');
+    $csvw->insertAll($rs_objects);
+    unset($csvw);
+}
 
 /**
 *   TESTS
