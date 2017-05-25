@@ -72,7 +72,8 @@ try{
     // put day back to the db
     $db->addDay($bDay);
     if($GLOBALS['free.ini']['simulate'] && $decisions['last_lap']){
-        write_results_to_csv('results.csv', $db->col, $today);
+        error_log()
+        write_results_to_csv('results.csv', $db->col, $decisions['total_slots'], $today);
     }
     unset($db);
 } catch (Exception $e){

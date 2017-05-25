@@ -249,13 +249,13 @@ function execute_decisions(array $decisions, JsonCollection &$db, $now = null)
  *
  * @param string $csvname The name of the csv file
  * @param array $serializedBookitDays Array with all the days to explore
- * @param array $decisions Array with the decisions made about department availability
+ * @param int $total_slots How many slots every day will have
  * @param timestamp $date The name of the csv file
  **/
 use League\Csv\Reader;
 use League\Csv\Writer;
  
-function write_results_to_csv($csvname, $serializedBookitDays, $decisions, $date = null){
+function write_results_to_csv($csvname, $serializedBookitDays, $total_slots, $date = null){
     $date = !$date ? time() : $date;
 
     //read the csv 
@@ -283,7 +283,7 @@ function write_results_to_csv($csvname, $serializedBookitDays, $decisions, $date
     }
 
     //add the new results
-    $stoday = date('Y-m-d', $today);
+    $stoday = date('Y-m-d', $date);
     $newres = ["V day | releases ->" => $stoday];
     // go over the entire bookitDay collection
     foreach ($serializedBookitDays as $day => $sBookitDay) {
@@ -297,7 +297,7 @@ function write_results_to_csv($csvname, $serializedBookitDays, $decisions, $date
 
     //back to csv
     array_unshift($rs_objects, array_keys(end($rs_objects)));
-    $csvw = Writer::createFromPath('result2.csv', 'w+');
+    $csvw = $csv->newWriter('w');
     $csvw->setDelimiter(';');
     $csvw->insertAll($rs_objects);
     unset($csvw);
