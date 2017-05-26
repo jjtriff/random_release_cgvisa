@@ -73,7 +73,7 @@ try{
     $db->addDay($bDay);
     if($GLOBALS['free.ini']['simulate'] && $decisions['last_lap']){
         error_log("Writing results to the file 'results.cvs'");
-        write_results_to_csv('results.csv', $db->col, $decisions['total_slots'], $today);
+        write_results_to_csv('logs/results.csv', $db->col, $decisions['total_slots'], $today);
     }
     unset($db);
 } catch (Exception $e){
