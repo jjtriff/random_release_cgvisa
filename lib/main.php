@@ -86,7 +86,7 @@ function initial_calculations(array $dbcol, $now = null)
 
     //incluir en Globals para usar en la funcion q no reserva, a no ser que tenga suficientes reservaciones
     $GLOBALS['free.ini']['slots2open4nextDays'] = $slots2open4nextDays;
-    $slots2open4farDays = round(($total_slots - $slots2open4nextDays) * $reservation_period / count($closer_days));
+    $slots2open4farDays = round(($total_slots - $slots2open4nextDays) * $far_days_release_factor);
 
     // BEGIN: turnos en dias distantes que se van a repartir en este lap
     if(!$last_lap){
@@ -135,6 +135,7 @@ function print_initial_decisions($decisions, $now = null){
     );
     if(count($decisions['thisLapSelectedFarDays']) < $decisions['thisLapFarSlots']){
         error_log("Unable to find ($decisions[thisLapFarSlots]) enough random days to release events.");
+        error_log("Only ".count($decisions['thisLapSelectedFarDays'])." random days were found.");
     }
     error_log("This is lap number $decisions[lap]");
     if($decisions['last_lap']){
