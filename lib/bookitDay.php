@@ -224,12 +224,12 @@ class BookitDay extends StdClass
       }
     }
 
-/**
- * releases every event preselected for this day acording to $this->preservation
- * array
- *
- * @return int The amount of events released by this function.
- **/
+    /**
+    * releases every event preselected for this day acording to $this->preservation
+    * array
+    *
+    * @return int The amount of events released by this function.
+    **/
     public function releaseDay(){
       //con cada uno de esos mandarlo a eliminar en el sistema
       $count = 0;
@@ -269,6 +269,18 @@ class BookitDay extends StdClass
 
       $this->date = strtotime($strDate);
       return ($this->date)? true : false;
+    }
+
+    /**
+     * Returns if the day is a holiday
+     *
+     * Just calls a function with
+     *
+     * @param type var Description
+     **/
+    public function isHoliday()
+    {
+      return CGHAB\BookititClient\isDateHoliday($this->date);
     }
 }
 

@@ -290,7 +290,12 @@ function write_results_to_csv($csvname, $serializedBookitDays, $total_slots, $da
     foreach ($serializedBookitDays as $day => $sBookitDay) {
         $bd = unserialize($sBookitDay);
         // calculating how many have been released 
-        $released = $total_slots - $bd->hasReservations();
+        if(!$bd->isHoliday()){
+            $released = $total_slots - $bd->hasReservations();
+        }
+        else{
+            $released = 0;
+        }
         $newres[$day] = $released;
     }
     
