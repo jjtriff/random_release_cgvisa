@@ -258,6 +258,7 @@ class BookitDay extends StdClass
     /**
       * Devuelve la fecha en str para usar por bookit, y asigna la fecha al att date q es un timestamp
       * q es usable despues para calcular
+      * @param string strDate la fecha en formato "YYYY-MM-DD"
       * @return if strDate == null String date for the day in the format YYYY-MM-DD
       * @return true if strDate es una fecha valida, false otherwise
       */
