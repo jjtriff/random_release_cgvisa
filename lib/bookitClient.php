@@ -140,6 +140,7 @@ function changeEventAgenda($event, $newAgenda)
  * @param StdClass $event The bookitit event as returned by getEvents
  * @param String $newStart Time of the day in the form of HH:mm
  * @param String $newEnd Time of the day in the form of HH:mm, if not supplied 1 hour later is calculated
+ * @return true if the change was effective
  **/
 function changeEventHour($event, $newStart, $newEnd = null)
 {
