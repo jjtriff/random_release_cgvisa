@@ -1,6 +1,6 @@
 <?php
 
-include('bookit/CRestClient.php');
+include_once('bookit/CRestClient.php');
 include_once('reservationUser.php');
 include_once('jsoncollection.php');
 include_once('randomization.php');
@@ -137,12 +137,12 @@ class BookitDay extends StdClass
     }
 
     /**
-    * release events from the ones already prereserved
-    *
-    * @param int howMany The amount of events to release
-    * @param int retries The amount of times we are going to try to release in case there is a connection error
-    * @return int The amount of events finnally released
-    **/
+      * release events from the ones already prereserved
+      *
+      * @param int howMany The amount of events to release
+      * @param int retries The amount of times we are going to try to release in case there is a connection error
+      * @return int The amount of events finnally released
+      **/
     public function _releaseEvents($howMany, $retries)
     {
       //buscar random en el array tantos como $howMany
@@ -225,11 +225,11 @@ class BookitDay extends StdClass
     }
 
     /**
-    * releases every event preselected for this day acording to $this->preservation
-    * array
-    *
-    * @return int The amount of events released by this function.
-    **/
+      * releases every event preselected for this day acording to $this->preservation
+      * array
+      *
+      * @return int The amount of events released by this function.
+      **/
     public function releaseDay(){
       //con cada uno de esos mandarlo a eliminar en el sistema
       $count = 0;
@@ -256,11 +256,11 @@ class BookitDay extends StdClass
     }
 
     /**
-    * Devuelve la fecha en str para usar por bookit, y asigna la fecha al att date q es un timestamp
-    * q es usable despues para calcular
-    * @return if strDate == null String date for the day in the format YYYY-MM-DD
-    * @return true if strDate es una fecha valida, false otherwise
-    */
+      * Devuelve la fecha en str para usar por bookit, y asigna la fecha al att date q es un timestamp
+      * q es usable despues para calcular
+      * @return if strDate == null String date for the day in the format YYYY-MM-DD
+      * @return true if strDate es una fecha valida, false otherwise
+      */
     public function Date($strDate = null)
     {
       if($strDate == null){
