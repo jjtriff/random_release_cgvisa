@@ -1,6 +1,17 @@
 <?php
 
-include_once '/home/jtriff/workspace/visado/lib/bookitClient.php';
+require_once 'lib/bookitClient.php';
+require_once 'lib/reservedBookitDay.php';
+
+
+// function eventFactory($agenda, $start_date, $start_time){
+//     $e = new StdClass();
+//     $e->agenda_id = $agenda;
+//     $e->start_time = $start_time;
+//     $e->start_date = $start_date;
+//     $e->id = 'created by FACTORY';
+//     return $e;
+// }
 
 
 // buscar en un rango de fechas las reservaciones hechas sobre la agenda viajes despues
@@ -33,22 +44,30 @@ while ($day <= $hasta) {
         try{
             // recuperar los eventos del dia
             $events = \CGHAB\BookititClient\getDateEvents(date('Y-m-d', $day));
-            // loop over them looking for the ones in $origin_agenda
-            $this_day_events = [];
+
+// // for testing
+
+// $events->new1 = eventFactory($agenda, date('Y-m-d', $day), '09:00');
+// $events->new21 = eventFactory($agenda, date('Y-m-d', $day), '09:00');
+// $events->new31 = eventFactory($agenda, date('Y-m-d', $day), '09:00');
+// $events->new41 = eventFactory($agenda, date('Y-m-d', $day), '09:00');
+
+
+            // loop over them looking for the ones in $agenda
+            $rbd = new ReservedBookitDay(date('Y-m-d',$day), $capacities);
             foreach ($events as $key => $event) {
                 //coger los eventos de un dia
-                if($event->agenda_id == $origin_agenda){
-                    if(!array_key_exists($event->start_time, $this_day_events)){
-                        $this_day_events[$event->start_time] = [];
+                if($event->agenda_id == $agenda){
+                    //empezar a acomodarlos de nuevo basados en las capacidades 
+                    // de cada horario usando la var $rbd
+                    $finalHour = $rbd->placeEvent($event);
+                    error_log("Placed event $event->id from $event->start_time to $finalHour");
+                    if($event->start_time != $finalHour){
+                        $count++;
                     }
-                    //separarlos por horarios
-                    $this_day_events[$event->start_time][] = $event;
                 }
             }
             
-            //empezar a acomodarlos de nuevo basados en las capacidades de cada horario
-
-
         } catch(Exception $e){
             error_log($e->getMessage());
         }
