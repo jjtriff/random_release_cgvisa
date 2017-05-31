@@ -86,10 +86,12 @@ class ReservedBookitDay extends BookitDay
             // llamar a esta funcion de nuevo con un nuevo start_time
             try{
                 $_ret = $this->placeEvent($event, date('H:i', strtotime($time.' +1 hour')));
+                return $_ret;
             } catch (ETimeOutOfBounds $e){
                 $availTime = $this->getLastHourAvailable();
                 if($availTime){
                     $_ret = $this->placeEvent($event, $availTime);
+                    return $_ret;
                 }
                 else{
                     throw new Exception("There is no place left in this day {$this->Date()} for event $event->id", 1);
