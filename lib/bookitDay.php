@@ -63,6 +63,7 @@ class BookitDay extends StdClass
 
     public function _prereserve($agenda, $service, $client, $retries)
     {
+      error_log("Now reserving on day ".$this->Date());
       $oRestClient = new CRestClient();
 
       // $date = ($date == null) ? $client->proposed_date : $date ;
