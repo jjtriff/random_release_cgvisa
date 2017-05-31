@@ -15,10 +15,10 @@ require_once 'lib/reservedBookitDay.php';
 
 
 // buscar en un rango de fechas las reservaciones hechas sobre la agenda viajes despues
-// $hasta = strtotime('2017-07-15'); 
-// $desde = strtotime('2017-06-01');
-$hasta = strtotime('2017-06-21'); # testing
-$desde = strtotime('2017-06-21'); # testing
+$desde = strtotime('2017-06-01');
+$hasta = strtotime('2017-07-15'); 
+// $hasta = strtotime('2017-06-21'); # testing
+// $desde = strtotime('2017-06-21'); # testing
 $agenda = 'bkt84315'; # visado 
 $log_name = 'rebalancing-events';
 $capacities = [
@@ -53,6 +53,7 @@ while ($day <= $hasta) {
 // $events->new41 = eventFactory($agenda, date('Y-m-d', $day), '09:00');
 
 
+            error_log("Day ".date('Y-m-d', $day)." events:");
             // loop over them looking for the ones in $agenda
             $rbd = new ReservedBookitDay(date('Y-m-d',$day), $capacities);
             foreach ($events as $key => $event) {
@@ -72,6 +73,6 @@ while ($day <= $hasta) {
             error_log($e->getMessage());
         }
         error_log('Day '.date('Y-m-d', $day).': '.$count.' moved events.');
-        $day += 24 * 60 * 60; # cantidad de segundos que tiene un dia
     }
+    $day += 24 * 60 * 60; # cantidad de segundos que tiene un dia
 }
