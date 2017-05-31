@@ -52,13 +52,13 @@ class ReservedBookitDay extends BookitDay
         $time = ($newTime) ? $newTime : $event->start_time;
 
         // check si esta hora existe en nuestro dia
-        if(!array_key_exists($time, $capacities)){       
+        if(!array_key_exists($time, $this->capacities)){       
             throw new ETimeOutOfBounds("The start_time requested for this event $event->start_time, is not within our timetable.");
         }            
 
         $_ret = '';
         // si hay disponibilidad en su turno
-        if($capacities[$time] > 0){
+        if($this->capacities[$time] > 0){
             // si el start_time que se solicita es igual al del evento
             if($time == $event->start_time){
                 // dejarlo como esta y mandar a disminuir la capacidad en ese turno
@@ -85,7 +85,7 @@ class ReservedBookitDay extends BookitDay
         else{
             // llamar a esta funcion de nuevo con un nuevo start_time
             try{
-                $_ret = $this->placeEvent($event, date('H:m', strtotime($time.' +1 hour')));
+                $_ret = $this->placeEvent($event, date('H:i', strtotime($time.' +1 hour')));
             } catch (ETimeOutOfBounds $e){
                 $availTime = $this->getLastHourAvailable();
                 if($availTime){
@@ -98,7 +98,7 @@ class ReservedBookitDay extends BookitDay
         }
 
         // disminuir la capacidad del turno donde se haya puesto
-        $capacities[$_ret] = $capacities[$_ret] - 1;
+        $this->capacities[$_ret] = $this->capacities[$_ret] - 1;
 
         // informar donde cayo finalmente
         return $_ret;
