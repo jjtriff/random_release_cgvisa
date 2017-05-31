@@ -144,7 +144,7 @@ function changeEventAgenda($event, $newAgenda)
  **/
 function changeEventHour($event, $newStart, $newEnd = null)
 {
-    $newEnd = ($newEnd) ? $newEnd : date('H:m', strtotime($newStart.' +1 hour'));
+    $newEnd = ($newEnd) ? $newEnd : date('H:i', strtotime($newStart.' +1 hour'));
     $oRestClient = new \CRestClient();
     // $ret = $GLOBALS['free.ini']['retries'];
     // while ($ret >= 0) {
