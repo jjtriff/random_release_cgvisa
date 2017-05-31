@@ -68,8 +68,8 @@ class ReservedBookitDay extends BookitDay
             else{
                 // ponerlo en su turno
                 try{
-                    $_ret = true; # for testing
-                    // $_ret = \CGHAB\BookititClient\changeEventHour($event, $time);
+                    // $_ret = true; # for testing
+                    $_ret = \CGHAB\BookititClient\changeEventHour($event, $time);
                     // si todo fue bien
                     if($_ret === true){
                         // mandar a disminuir la capacidad en ese turno
