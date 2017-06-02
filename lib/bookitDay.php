@@ -171,6 +171,10 @@ class BookitDay extends StdClass
         if($forDeletion){
           unset($this->prereservations[$key]);
         }
+        //si no se elimina ok tambien eliminarlo del array
+        else{
+          unset($this->prereservations[$key]);
+        }
       }
       if(count($selected) > 0){
         $this->open = true;
